@@ -1,5 +1,4 @@
-package org.obukh;
-
+package org.obukh.tests.base;
 import org.obukh.driver.BrowserType;
 import org.obukh.driver.WebDriverHolder;
 import org.obukh.listeners.LoggerTestListener;
@@ -8,10 +7,10 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
-
 @Listeners({LoggerTestListener.class})
 public class BaseTest {
-    protected void goToUrl(String url) {
+
+    public void goToUrl(String url) {
         WebDriverHolder.getInstance().getDriver().get(url);
     }
 
@@ -19,6 +18,7 @@ public class BaseTest {
     public void initAll() {
         WebDriverHolder.getInstance().initDriver(BrowserType.CHROME);
         PropertiesReader.getInstance("app.properties");
+        clearCache();
     }
 
     @AfterSuite
@@ -28,13 +28,14 @@ public class BaseTest {
         }
     }
 
-    public void sleep(long msecs) {
-        try {
+    public void sleep(long msecs) throws InterruptedException {
             Thread.sleep(msecs);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
+
+    public void clearCache(){
+        WebDriverHolder.getInstance().getDriver().manage().deleteAllCookies();
+    }
+
 }
 
 
