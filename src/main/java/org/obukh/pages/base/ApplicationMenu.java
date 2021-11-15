@@ -7,8 +7,14 @@ import org.obukh.pages.MainPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+import java.util.Objects;
 
 public class ApplicationMenu extends BasePage {
+
+    @FindBy(xpath = "//span[@class='cart-qty']")
+    private WebElement numberOfItemsInCart;
 
     public void clickOnMenuItem(MenuItems menuItem) {
         logger.info("Select menu item: " + menuItem);
@@ -27,7 +33,7 @@ public class ApplicationMenu extends BasePage {
         }
     }
 
-    @Step("Select logwin in main menu")
+    @Step("Select login in main menu")
     public LoginPage selectLogin() {
         clickOnMenuItem(MenuItems.LOGIN);
         return new LoginPage();
@@ -37,6 +43,20 @@ public class ApplicationMenu extends BasePage {
     public MainPage selectLogout() {
         clickOnMenuItem(MenuItems.LOGOUT);
         return new MainPage();
+    }
+
+    public Integer getQtyOfItemsInCart() {
+        try {
+            String qtyWithBrackets = numberOfItemsInCart.getText();
+            logger.info("Q-ty with brackets: "+ qtyWithBrackets);
+            //Integer qtyOfItems = Integer.parseInt(qtyWithBrackets.replaceAll("\\(|\\)",""));
+            Integer qtyOfItems = Integer.parseInt(qtyWithBrackets.substring(1,qtyWithBrackets.length()-1));
+            logger.info("Q-ty: "+ qtyOfItems);
+            return qtyOfItems; }
+        catch (NullPointerException e) {
+            logger.info("Q-ty error ");
+            return 0;
+        }
     }
 
 }

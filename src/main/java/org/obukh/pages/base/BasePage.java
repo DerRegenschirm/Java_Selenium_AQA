@@ -3,6 +3,7 @@ package org.obukh.pages.base;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.obukh.pages.CategoryPage;
+import org.obukh.pages.GiftCardPage;
 import org.obukh.pages.SearchPage;
 
 public class BasePage {
@@ -25,6 +26,11 @@ public class BasePage {
     public SearchPage searchPage() {
         logger.info("User is on the Search page");
         return new SearchPage();
+    }
+
+    public GiftCardPage giftCardPage() {
+        logger.info("User is on the Gift card description page");
+        return new GiftCardPage();
     }
 
 }
