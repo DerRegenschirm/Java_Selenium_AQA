@@ -44,13 +44,7 @@ public class GiftCardPage extends BasePage {
 
     public GiftCardPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForPageLoad();
-    }
-
-    public GiftCardPage waitForPageLoad() {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
-                .until(ExpectedConditions.visibilityOfAllElements(title, mainPicture));
-        return this;
+        waitForElementsLoad(title, mainPicture);
     }
 
     @Step("Clear all input fields on the form")
@@ -92,6 +86,7 @@ public class GiftCardPage extends BasePage {
 
     @Step("Close notification bar")
     public GiftCardPage closeNotificationBar() throws NoSuchElementException {
+        waitForElementsLoad(closeNotificationBarItem);
         closeNotificationBarItem.click();
         return this;
     }

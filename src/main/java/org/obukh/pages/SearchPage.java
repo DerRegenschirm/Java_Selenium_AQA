@@ -29,7 +29,7 @@ public class SearchPage extends BasePage {
 
     public SearchPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForPageLoad();
+        waitForElementsLoad(searchButton,searchField);
     }
 
     public SearchPage fillSearchField(String request) {
@@ -51,12 +51,6 @@ public class SearchPage extends BasePage {
             return false;
         }
 
-    }
-
-    private SearchPage waitForPageLoad() {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
-                .until(ExpectedConditions.visibilityOfAllElements(searchButton, searchField));
-        return this;
     }
 
     public boolean isNoProductFound() {

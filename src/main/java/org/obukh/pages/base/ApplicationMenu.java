@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.Objects;
 
@@ -15,6 +16,11 @@ public class ApplicationMenu extends BasePage {
 
     @FindBy(xpath = "//span[@class='cart-qty']")
     private WebElement numberOfItemsInCart;
+
+    public ApplicationMenu() {
+        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
+    }
+
 
     public void clickOnMenuItem(MenuItems menuItem) {
         logger.info("Select menu item: " + menuItem);
@@ -49,12 +55,9 @@ public class ApplicationMenu extends BasePage {
         try {
             String qtyWithBrackets = numberOfItemsInCart.getText();
             logger.info("Q-ty with brackets: "+ qtyWithBrackets);
-            //Integer qtyOfItems = Integer.parseInt(qtyWithBrackets.replaceAll("\\(|\\)",""));
-            Integer qtyOfItems = Integer.parseInt(qtyWithBrackets.substring(1,qtyWithBrackets.length()-1));
-            logger.info("Q-ty: "+ qtyOfItems);
-            return qtyOfItems; }
-        catch (NullPointerException e) {
-            logger.info("Q-ty error ");
+            return Integer.parseInt(qtyWithBrackets.replaceAll("[()]",""));
+        } catch (NullPointerException e) {
+            logger.info("Q-ty error");
             return 0;
         }
     }

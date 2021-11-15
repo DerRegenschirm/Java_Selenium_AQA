@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.obukh.driver.WebDriverHolder;
+import org.obukh.utils.PropertiesReader;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestContext;
@@ -39,7 +40,9 @@ public class LoggerTestListener implements ITestListener {
 
         File screenshotAs = ((TakesScreenshot) WebDriverHolder.getInstance().getDriver()).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(screenshotAs, new File(tr.getName() + ".png"));
+            FileUtils.copyFile(screenshotAs,
+                    new File(PropertiesReader.getInstance("app.properties").getPropertyByName("download.dir")
+                            +"/"+ tr.getName() + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

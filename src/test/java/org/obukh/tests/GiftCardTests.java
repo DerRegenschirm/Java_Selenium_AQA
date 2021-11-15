@@ -3,7 +3,6 @@ package org.obukh.tests;
 import org.obukh.pages.base.BasePage;
 import org.obukh.tests.base.BaseTest;
 import org.obukh.utils.PropertiesReader;
-//import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -17,7 +16,8 @@ public class GiftCardTests extends BaseTest {
         BasePage page = new BasePage();
         page.applicationMenu()
                 .selectLogin()
-                .logInComplete(PropertiesReader.getInstance().getPropertyByName("user.email"), PropertiesReader.getInstance().getPropertyByName("user.password"));
+                .logInComplete(PropertiesReader.getInstance().getPropertyByName("user.email"),
+                        PropertiesReader.getInstance().getPropertyByName("user.password"));
     }
 
     @AfterTest
@@ -38,26 +38,22 @@ public class GiftCardTests extends BaseTest {
                 .clearAllFieldsOnForm()
                 .enterRecipientName("Tom Marvolo Riddle")
                 .clickOnAddToCartButton();
-        //Thread.sleep(1000);
 
         Assert.assertTrue(page.giftCardPage()
-                        //.switchToAlert()
                         .isNotificationBarAppeared(),
                 "No notification bar");
 
         String validationMessageText = "Enter valid sender name";
         Assert.assertTrue(page.giftCardPage()
-                        //.switchToAlert()
                         .compareMessageText(validationMessageText),
                 "Different validation text");
 
         page.giftCardPage()
-//                .switchToAlert()
                 .closeNotificationBar();
     }
 
     @Test
-    public void addGiftCardToCart() throws Exception {
+    public void addGiftCardToCart(){
         BasePage page = new BasePage();
         page.categoriesMenu()
                 .selectMainCategory("Gift Cards ")
@@ -74,19 +70,14 @@ public class GiftCardTests extends BaseTest {
                 .enterSenderName("Lord Voldemort")
                 .clickOnAddToCartButton();
 
-        Thread.sleep(1000);
-
         page.giftCardPage().
-//                //switchToAlert().dismiss();
                 closeNotificationBar();
-
-        //Thread.sleep(1000);
 
         Integer newQtyOfItemsInCart = page.applicationMenu()
                         .getQtyOfItemsInCart();
         Integer qtyToCompare = oldQtyOfItemsInCart+1;
 
-        Assert.assertEquals(qtyToCompare, oldQtyOfItemsInCart,
+        Assert.assertEquals(qtyToCompare, newQtyOfItemsInCart,
                 "Different quantity: " + oldQtyOfItemsInCart + " -> " + newQtyOfItemsInCart);
     }
 

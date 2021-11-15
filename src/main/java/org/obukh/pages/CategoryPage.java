@@ -33,7 +33,7 @@ public class CategoryPage extends BasePage {
 
     public CategoryPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForPageLoad();
+        waitForElementsLoad(pageTitle,selectCurrency);
     }
 
     @Step("Get list of prices on the product wall")
@@ -97,11 +97,11 @@ public class CategoryPage extends BasePage {
     }
 
 
-    private CategoryPage waitForPageLoad() {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
-                .until(ExpectedConditions.visibilityOfAllElements(pageTitle, selectCurrency));
-        return this;
-    }
+//    private CategoryPage waitForPageLoad() {
+//        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+//                .until(ExpectedConditions.visibilityOfAllElements(pageTitle, selectCurrency));
+//        return this;
+//    }
 
     @Step("isPriceCurrencyAndSelectedCurrencyAreTheSame")
     public boolean isPriceCurrencyAndSelectedCurrencyAreTheSame() {

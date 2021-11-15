@@ -2,9 +2,13 @@ package org.obukh.pages.base;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.obukh.driver.WebDriverHolder;
 import org.obukh.pages.CategoryPage;
 import org.obukh.pages.GiftCardPage;
 import org.obukh.pages.SearchPage;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BasePage {
 
@@ -31,6 +35,18 @@ public class BasePage {
     public GiftCardPage giftCardPage() {
         logger.info("User is on the Gift card description page");
         return new GiftCardPage();
+    }
+
+    public BasePage waitForElementsLoad(WebElement element) {
+        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+                .until(ExpectedConditions.visibilityOfAllElements(element));
+        return this;
+    }
+
+    public BasePage waitForElementsLoad(WebElement... args) {
+        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+                .until(ExpectedConditions.visibilityOfAllElements(args));
+        return this;
     }
 
 }

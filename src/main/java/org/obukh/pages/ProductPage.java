@@ -18,12 +18,7 @@ public class ProductPage extends BasePage {
 
     public ProductPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForPageLoad();
+        waitForElementsLoad(title);
     }
 
-    private ProductPage waitForPageLoad() {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
-                .until(ExpectedConditions.visibilityOfAllElements(title, mainPicture));
-        return this;
-    }
 }
