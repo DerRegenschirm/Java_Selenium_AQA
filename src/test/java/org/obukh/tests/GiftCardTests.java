@@ -61,7 +61,7 @@ public class GiftCardTests extends BaseTest {
                 .clickOnAddToCartButton(2)
                 .giftCardPage();
 
-        Integer oldQtyOfItemsInCart = page.applicationMenu()
+        Integer oldQtyOfItemsInCart = page.headerMenu()
                         .getQtyOfItemsInCart();
 
         page.giftCardPage()
@@ -73,7 +73,7 @@ public class GiftCardTests extends BaseTest {
         page.giftCardPage().
                 closeNotificationBar();
 
-        Integer newQtyOfItemsInCart = page.applicationMenu()
+        Integer newQtyOfItemsInCart = page.headerMenu()
                         .getQtyOfItemsInCart();
         Integer qtyToCompare = oldQtyOfItemsInCart+1;
 

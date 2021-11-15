@@ -14,8 +14,8 @@ import java.util.Objects;
 
 public class ApplicationMenu extends BasePage {
 
-    @FindBy(xpath = "//span[@class='cart-qty']")
-    private WebElement numberOfItemsInCart;
+//    @FindBy(xpath = "//span[@class='cart-qty']")
+//    private WebElement numberOfItemsInCart;
 
     public ApplicationMenu() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
@@ -51,15 +51,15 @@ public class ApplicationMenu extends BasePage {
         return new MainPage();
     }
 
-    public Integer getQtyOfItemsInCart() {
-        try {
-            String qtyWithBrackets = numberOfItemsInCart.getText();
-            logger.info("Q-ty with brackets: "+ qtyWithBrackets);
-            return Integer.parseInt(qtyWithBrackets.replaceAll("[()]",""));
-        } catch (NullPointerException e) {
-            logger.info("Q-ty error");
-            return 0;
-        }
-    }
+//    public Integer getQtyOfItemsInCart() {
+//        try {
+//            String qtyWithBrackets = numberOfItemsInCart.getText();
+//            logger.info("Q-ty with brackets: "+ qtyWithBrackets);
+//            return Integer.parseInt(qtyWithBrackets.replaceAll("[()]",""));
+//        } catch (NullPointerException e) {
+//            logger.info("Q-ty error");
+//            return 0;
+//        }
+//    }
 
 }

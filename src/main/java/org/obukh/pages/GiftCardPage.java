@@ -91,12 +91,6 @@ public class GiftCardPage extends BasePage {
         return this;
     }
 
-//    @Step("Switch to alert")
-//    public Alert switchToAlert() {
-//        Alert alert = WebDriverHolder.getInstance().getDriver().switchTo().alert();
-//        return alert;
-//    }
-
     public boolean compareMessageText ( String message) {
         if (isNotificationBarAppeared()) {
             for (WebElement messageElement :

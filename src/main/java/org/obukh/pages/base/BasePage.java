@@ -27,6 +27,11 @@ public class BasePage {
         return new CategoryPage();
     }
 
+    public HeaderMenu headerMenu() {
+        logger.info("User is on the Category page");
+        return new HeaderMenu();
+    }
+
     public SearchPage searchPage() {
         logger.info("User is on the Search page");
         return new SearchPage();

@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryPage extends BasePage {
-    @FindBy(css = "#customerCurrency")
-    private WebElement selectCurrency;
 
     @FindBy(css = ".price.actual-price")
     private List<WebElement> pricesOnThePage;
@@ -33,7 +31,7 @@ public class CategoryPage extends BasePage {
 
     public CategoryPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForElementsLoad(pageTitle,selectCurrency);
+        waitForElementsLoad(pageTitle);
     }
 
     @Step("Get list of prices on the product wall")
@@ -45,16 +43,6 @@ public class CategoryPage extends BasePage {
             pricesList.add(Double.parseDouble(element.getText().replace(String.valueOf(currentPriceCurrency().getSymbol()), "")));
         }
         return pricesList;
-    }
-
-    @Step("Get the current currency")
-    public Currency currentCurrency() {
-        logger.info("Get the current currency");
-        Select selectCurrencyElement = new Select(selectCurrency);
-        if (selectCurrencyElement.getFirstSelectedOption().getText().equals(Currency.DOLLAR.getText())) {
-            return Currency.DOLLAR;
-        }
-        return Currency.EURO;
     }
 
     @Step("Get the current currency from product wall")
@@ -70,21 +58,9 @@ public class CategoryPage extends BasePage {
         }
     }
 
-    @Step("Change currency")
-    public CategoryPage changeCurrency() {
-        logger.info("Change currency");
-        Select selectCurrencyElement = new Select(selectCurrency);
-        if (currentCurrency().equals(Currency.DOLLAR)) {
-            selectCurrencyElement.selectByVisibleText(Currency.EURO.getText());
-        } else {
-            selectCurrencyElement.selectByVisibleText(Currency.DOLLAR.getText());
-        }
-        return new CategoryPage();
-    }
-
     @Step("isNewPriceCorrect")
     public boolean isNewPriceCorrect(List<Double> previousPrices, List<Double> newPrices) {
-        double index = currentCurrency().getIndex();
+        double index = headerMenu().currentCurrency().getIndex();
         if (previousPrices.size() == newPrices.size()) {
             for (int i = 0; i < previousPrices.size() - 1; i++) {
                 if (Math.ceil(previousPrices.get(i)) != Math.ceil(newPrices.get(i) * index)) {
@@ -96,16 +72,9 @@ public class CategoryPage extends BasePage {
         return false;
     }
 
-
-//    private CategoryPage waitForPageLoad() {
-//        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
-//                .until(ExpectedConditions.visibilityOfAllElements(pageTitle, selectCurrency));
-//        return this;
-//    }
-
     @Step("isPriceCurrencyAndSelectedCurrencyAreTheSame")
     public boolean isPriceCurrencyAndSelectedCurrencyAreTheSame() {
-        return currentPriceCurrency().equals(currentCurrency());
+        return currentPriceCurrency().equals(headerMenu().currentCurrency());
     }
 
     @Step("isPriceChanged")

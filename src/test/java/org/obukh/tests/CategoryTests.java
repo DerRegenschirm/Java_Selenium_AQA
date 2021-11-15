@@ -30,19 +30,19 @@ public class CategoryTests extends BaseTest {
     }
 
     @Test
-    public void changeCurrencyTest() throws InterruptedException {
+    public void changeCurrencyTest() {
         BasePage page = new BasePage();
         page.categoriesMenu()
                 .selectMainCategory("Books");
 
         List<Double> previousPrices = page.categoryPage().getPricesOnThePage();
-        Currency previousPriceSymbol = page.categoryPage().currentCurrency();
+        Currency previousPriceSymbol = page.headerMenu().currentCurrency();
 
-        page.categoryPage()
+        page.headerMenu()
                 .changeCurrency();
 
         List<Double> newPrices = page.categoryPage().getPricesOnThePage();
-        Currency newPriceSymbol = page.categoryPage().currentCurrency();
+        Currency newPriceSymbol = page.headerMenu().currentCurrency();
 
         Assert.assertTrue(page.categoryPage().isPriceChanged(previousPriceSymbol, newPriceSymbol));
         Assert.assertTrue(page.categoryPage().isPriceCurrencyAndSelectedCurrencyAreTheSame());
