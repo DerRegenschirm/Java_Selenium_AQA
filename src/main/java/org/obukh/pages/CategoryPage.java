@@ -3,13 +3,9 @@ package org.obukh.pages;
 import io.qameta.allure.Step;
 import org.obukh.driver.WebDriverHolder;
 import org.obukh.pages.base.BasePage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -82,14 +78,6 @@ public class CategoryPage extends BasePage {
         return !previousPrice.equals(newPrice);
     }
 
-    @Step("Add to cart a random item")
-    public ProductPage clickOnAddToCartButtonRandomItem () {
-        Random random = new Random();
-        int randomInt = random.nextInt(addToCartButtons.size());
-        addToCartButtons.get(randomInt).click();
-        return new ProductPage();
-    }
-
     @Step("Add to cart a random gift card")
     public GiftCardPage clickOnAddToCartButtonRandomGiftCard () {
         Random random = new Random();
@@ -98,8 +86,26 @@ public class CategoryPage extends BasePage {
         return new GiftCardPage();
     }
 
+    @Step("Add to cart a random item")
+    public CategoryPage clickOnAddToCartButtonRandomItem () {
+        Random random = new Random();
+        int randomInt = random.nextInt(addToCartButtons.size());
+        addToCartButtons.get(randomInt).click();
+        return new CategoryPage();
+    }
+
+    @Step("Add to cart random several items")
+    public CategoryPage clickOnAddToCartButtonSeveralRandomItems (int numberOfItems) {
+        Random random = new Random();
+        for (int i=1; i<numberOfItems;i++) {
+            int randomInt = random.nextInt(addToCartButtons.size());
+            addToCartButtons.get(randomInt).click();
+        }
+        return new CategoryPage();
+    }
+
     @Step("Add to cart an item")
-    public ProductPage clickOnAddToCartButton (WebElement item) {
+    public CategoryPage clickOnAddToCartButton (WebElement item) {
         for (int index = 0; index<= productItems.size(); index++) {
             WebElement productItem = productItems.get(index);
             if (productItem.equals(item)) {
@@ -107,13 +113,13 @@ public class CategoryPage extends BasePage {
                 break;
             }
         }
-        return new ProductPage();
+        return new CategoryPage();
     }
 
     @Step("Add to cart an item")
-    public ProductPage clickOnAddToCartButton (int index) {
+    public CategoryPage clickOnAddToCartButton (int index) {
         addToCartButtons.get(index).click();
-        return new ProductPage();
+        return new CategoryPage();
     }
 
 }

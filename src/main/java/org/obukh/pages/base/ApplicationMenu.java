@@ -4,23 +4,18 @@ import io.qameta.allure.Step;
 import org.obukh.driver.WebDriverHolder;
 import org.obukh.pages.LoginPage;
 import org.obukh.pages.MainPage;
+import org.obukh.pages.ShoppingCartPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.Objects;
 
 public class ApplicationMenu extends BasePage {
-
-//    @FindBy(xpath = "//span[@class='cart-qty']")
-//    private WebElement numberOfItemsInCart;
 
     public ApplicationMenu() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
     }
-
 
     public void clickOnMenuItem(MenuItems menuItem) {
         logger.info("Select menu item: " + menuItem);
@@ -51,15 +46,10 @@ public class ApplicationMenu extends BasePage {
         return new MainPage();
     }
 
-//    public Integer getQtyOfItemsInCart() {
-//        try {
-//            String qtyWithBrackets = numberOfItemsInCart.getText();
-//            logger.info("Q-ty with brackets: "+ qtyWithBrackets);
-//            return Integer.parseInt(qtyWithBrackets.replaceAll("[()]",""));
-//        } catch (NullPointerException e) {
-//            logger.info("Q-ty error");
-//            return 0;
-//        }
-//    }
+    @Step("Select shopping cart in main menu")
+    public ShoppingCartPage selectShoppingCart() {
+        clickOnMenuItem(MenuItems.SHOPPING_CART);
+        return new ShoppingCartPage();
+    }
 
 }
