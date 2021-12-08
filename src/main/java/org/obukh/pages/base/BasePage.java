@@ -54,6 +54,12 @@ public class BasePage {
         return this;
     }
 
+    public BasePage waitForElementsClickable(WebElement element) {
+        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+                .until(ExpectedConditions.elementToBeClickable(element));
+        return this;
+    }
+
     public BasePage waitForElementsLoad(WebElement... args) {
         new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
                 .until(ExpectedConditions.visibilityOfAllElements(args));

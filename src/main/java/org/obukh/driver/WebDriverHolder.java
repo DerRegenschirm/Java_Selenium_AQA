@@ -21,7 +21,8 @@ public class WebDriverHolder {
     public void initDriver(BrowserType browserTypes){
         if(driver == null){
             driver = WebDriverFactory.initDriver(browserTypes);
-            driver.manage().window().maximize();
+            //driver.manage().window().maximize();
+            driver.manage().window();
         }
     }
     public WebDriver getDriver(){

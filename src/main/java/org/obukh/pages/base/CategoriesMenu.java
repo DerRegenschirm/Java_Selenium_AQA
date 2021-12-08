@@ -17,14 +17,14 @@ public class CategoriesMenu extends BasePage {
 
     public CategoryPage selectCategory(String topCategoryName, String subCategoryName) {
         logger.info("Select category: " + topCategoryName + " --> " + subCategoryName);
-        WebElement mainCategory = categoryMenu.findElement(By.xpath(".//a[contains(text(), '" + topCategoryName + "')]"));
+        WebElement mainCategory = categoryMenu.findElement(By.xpath("//ul[contains(@class, 'notmobile')]//a[contains(text(), '" + topCategoryName + "')]"));
         new Actions(WebDriverHolder.getInstance().getDriver())
                 .moveToElement(mainCategory)
                 .build().perform();
         if (StringUtils.isEmpty(subCategoryName)) {
             mainCategory.click();
         } else {
-            mainCategory.findElement(By.xpath(".//ul//a{contains(text(), '" + subCategoryName + "')]")).click();
+            mainCategory.findElement(By.xpath("//ul[contains(@class, 'notmobile')]//a[contains(text(), '" + subCategoryName + "')]")).click();
         }
         return new CategoryPage();
     }

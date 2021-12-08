@@ -25,6 +25,9 @@ public class CategoryPage extends BasePage {
     @FindBy(xpath = "//button[contains(@class,'product-box-add-to-cart-button')]")
     private List<WebElement> addToCartButtons;
 
+    @FindBy(xpath = "//div[@class = 'bar-notification-container']//span[@class ='close']")
+    private WebElement closeNotificationBar;
+
     public CategoryPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
         waitForElementsLoad(pageTitle);
@@ -86,6 +89,13 @@ public class CategoryPage extends BasePage {
         return new GiftCardPage();
     }
 
+    @Step("close Notification Bar")
+    public CategoryPage closeNotificationBar() {
+        logger.info("close Notification Bar");
+        closeNotificationBar.click();
+        return new CategoryPage();
+    }
+
     @Step("Add to cart a random item")
     public CategoryPage clickOnAddToCartButtonRandomItem () {
         Random random = new Random();
@@ -98,7 +108,7 @@ public class CategoryPage extends BasePage {
     public CategoryPage clickOnAddToCartButtonSeveralRandomItems (int numberOfItems) {
         Random random = new Random();
         for (int i=1; i<numberOfItems;i++) {
-            int randomInt = random.nextInt(addToCartButtons.size());
+            int randomInt = random.nextInt(addToCartButtons.size()-1)+1; // to not add the 1st item
             addToCartButtons.get(randomInt).click();
         }
         return new CategoryPage();

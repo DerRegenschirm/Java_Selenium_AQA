@@ -19,9 +19,10 @@ public class ApplicationMenu extends BasePage {
 
     public void clickOnMenuItem(MenuItems menuItem) {
         logger.info("Select menu item: " + menuItem);
-        WebDriverHolder.getInstance().getDriver()
-                .findElement(By.className(("ico-") + menuItem.getValue()))
-                .click();
+        WebElement button = WebDriverHolder.getInstance().getDriver()
+                .findElement(By.className(("ico-") + menuItem.getValue()));
+        waitForElementsClickable(button);
+        button.click();
     }
 
     public boolean isMenuItemVisible(MenuItems menuItem) {
