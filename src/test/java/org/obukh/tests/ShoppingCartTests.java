@@ -30,57 +30,43 @@ public class ShoppingCartTests extends BaseTest {
     }
 
     @Test
-    public void checkTheCorrectCalculations() {
+    public void removeItemFromCartCalculation() {
         BasePage page = new BasePage();
         page.categoriesMenu()
                 .selectCategory("Computers ", "Notebooks ");
 
-        int numberOfAddedItems = 3; // to add 3 random items to the cart
         page.categoryPage()
-                .clickOnAddToCartButtonSeveralRandomItems(numberOfAddedItems);
+                .clickOnAddToCartButtonRandomItemsNotApple()
+                .closeNotificationBar()
+                .clickOnAddToCartButtonRandomItemsNotApple()
+                .closeNotificationBar()
+                .clickOnAddToCartButtonRandomItemsNotApple()
+                .closeNotificationBar();
 
         page.applicationMenu().
                 selectShoppingCart();
 
-        if (page.shoppingCartPage().isShoppingCartEmpty()) {
+        ShoppingCartPage cartPage = page.shoppingCartPage();
+
+        if (cartPage.isShoppingCartEmpty()) {
             Assert.fail("No items in cart");
         }
 
-        List<ShoppingCartPage.ShoppingCartItem> cartItems = page.shoppingCartPage().initCartTable();
+        List<ShoppingCartPage.ShoppingCartItem> cartItems = cartPage.initCartTable();
 
-        Assert.assertTrue(page.shoppingCartPage().compareInsideTablePrices(cartItems),
+        Assert.assertTrue(cartPage.compareInsideTablePrices(cartItems),
                 "Wrong calculation inside the table");
-        Assert.assertTrue(page.shoppingCartPage().compareSubtotalPrices(cartItems),
+        Assert.assertTrue(cartPage.compareSubtotalPrices(cartItems),
                 "Wrong subtotal cost calculation");
-        Assert.assertTrue(page.shoppingCartPage().comparePricesOutsideTable(),
+        Assert.assertTrue(cartPage.comparePricesOutsideTable(),
                 "Wrong total cost calculation");
-    }
 
-    @Test
-    public void deleteItemFromCart() {
-        BasePage page = new BasePage();
-        page.categoriesMenu()
-                .selectCategory("Computers ", "Notebooks ");
+        Float totalCostBefore = cartPage.getTotalAmount();
 
-        int numberOfAddedItems = 3; // to add 3 random items
-        page.categoryPage()
-                .clickOnAddToCartButtonSeveralRandomItems(numberOfAddedItems);
+        cartPage.clickRemoveRandomProductFromCart(cartItems);
 
-        page.applicationMenu().
-                selectShoppingCart();
-
-        if (page.shoppingCartPage().isShoppingCartEmpty()) {
-            Assert.fail("No items in cart");
-        }
-
-        List<ShoppingCartPage.ShoppingCartItem> cartItems = page.shoppingCartPage().initCartTable();
-        Float totalCostBefore = page.shoppingCartPage().getTotalAmount();
-
-        page.applicationMenu().
-                selectShoppingCart().clickRemoveRandomProductFromCart(cartItems);
-
-        Float totalCostAfter = page.shoppingCartPage().getTotalAmount();
+        Float totalCostAfter = cartPage.getTotalAmount();
 
         Assert.assertTrue(totalCostAfter < totalCostBefore, "The cost wasn't getting less");
-    }
+}
 }
