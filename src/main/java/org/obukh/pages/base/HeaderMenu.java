@@ -59,5 +59,4 @@ public class HeaderMenu extends BasePage {
         return new CategoryPage();
     }
 
-
 }

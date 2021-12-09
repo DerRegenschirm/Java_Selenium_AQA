@@ -3,13 +3,10 @@ package org.obukh.pages;
 import io.qameta.allure.Step;
 import org.obukh.driver.WebDriverHolder;
 import org.obukh.pages.base.BasePage;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -28,6 +25,9 @@ public class CategoryPage extends BasePage {
 
     @FindBy(xpath = "//button[contains(@class,'product-box-add-to-cart-button')]")
     private List<WebElement> addToCartButtons;
+
+    @FindBy(xpath = "//div[@class = 'bar-notification-container']//span[@class ='close']")
+    private WebElement closeNotificationBar;
 
     public CategoryPage() {
         PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
@@ -60,6 +60,7 @@ public class CategoryPage extends BasePage {
 
     @Step("isNewPriceCorrect")
     public boolean isNewPriceCorrect(List<Double> previousPrices, List<Double> newPrices) {
+        logger.info("isNewPriceCorrect");
         double index = headerMenu().currentCurrency().getIndex();
         if (previousPrices.size() == newPrices.size()) {
             for (int i = 0; i < previousPrices.size() - 1; i++) {
@@ -82,38 +83,64 @@ public class CategoryPage extends BasePage {
         return !previousPrice.equals(newPrice);
     }
 
-    @Step("Add to cart a random item")
-    public ProductPage clickOnAddToCartButtonRandomItem () {
-        Random random = new Random();
-        int randomInt = random.nextInt(addToCartButtons.size());
-        addToCartButtons.get(randomInt).click();
-        return new ProductPage();
-    }
-
     @Step("Add to cart a random gift card")
-    public GiftCardPage clickOnAddToCartButtonRandomGiftCard () {
+    public GiftCardPage clickOnAddToCartButtonRandomGiftCard() {
         Random random = new Random();
         int randomInt = random.nextInt(addToCartButtons.size());
         addToCartButtons.get(randomInt).click();
         return new GiftCardPage();
     }
 
+    @Step("close Notification Bar")
+    public CategoryPage closeNotificationBar() {
+        try {
+            logger.info("Close Notification Bar");
+            do {
+                waitForElementsLoad(closeNotificationBar);
+                closeNotificationBar.click();
+            } while (closeNotificationBar != null);
+            return new CategoryPage();
+        } catch (Exception e) {
+            return new CategoryPage();
+        }
+    }
+
+    @Step("Add to cart a random item")
+    public CategoryPage clickOnAddToCartButtonRandomItem() {
+        logger.info("Add to cart a random item");
+        Random random = new Random();
+        int randomInt = random.nextInt(addToCartButtons.size());
+        addToCartButtons.get(randomInt).click();
+        return new CategoryPage();
+    }
+
+    @Step("Add to cart random item - not Apple(1st) ")
+    public CategoryPage clickOnAddToCartButtonRandomItemsNotApple() {
+        logger.info("Add to cart random item - not Apple(1st)");
+        Random random = new Random();
+        int randomInt = random.nextInt(addToCartButtons.size() - 1) + 1; // to not add the 1st item - Apple
+        addToCartButtons.get(randomInt).click();
+        return new CategoryPage();
+    }
+
     @Step("Add to cart an item")
-    public ProductPage clickOnAddToCartButton (WebElement item) {
-        for (int index = 0; index<= productItems.size(); index++) {
+    public CategoryPage clickOnAddToCartButton(WebElement item) {
+        logger.info("Add to cart an item");
+        for (int index = 0; index <= productItems.size(); index++) {
             WebElement productItem = productItems.get(index);
             if (productItem.equals(item)) {
                 addToCartButtons.get(index).click();
                 break;
             }
         }
-        return new ProductPage();
+        return new CategoryPage();
     }
 
     @Step("Add to cart an item")
-    public ProductPage clickOnAddToCartButton (int index) {
+    public CategoryPage clickOnAddToCartButton(int index) {
+        logger.info("Add to cart an item number " + index);
         addToCartButtons.get(index).click();
-        return new ProductPage();
+        return new CategoryPage();
     }
 
 }

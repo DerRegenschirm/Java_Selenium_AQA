@@ -6,6 +6,7 @@ import org.obukh.driver.WebDriverHolder;
 import org.obukh.pages.CategoryPage;
 import org.obukh.pages.GiftCardPage;
 import org.obukh.pages.SearchPage;
+import org.obukh.pages.ShoppingCartPage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -42,9 +43,20 @@ public class BasePage {
         return new GiftCardPage();
     }
 
+    public ShoppingCartPage shoppingCartPage() {
+        logger.info("User is on the Shopping Cart page");
+        return new ShoppingCartPage();
+    }
+
     public BasePage waitForElementsLoad(WebElement element) {
         new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
                 .until(ExpectedConditions.visibilityOfAllElements(element));
+        return this;
+    }
+
+    public BasePage waitForElementsClickable(WebElement element) {
+        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+                .until(ExpectedConditions.elementToBeClickable(element));
         return this;
     }
 
