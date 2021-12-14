@@ -1,4 +1,6 @@
-package org.obukh.utils;
+package org.obukh.core.utils;
+
+import org.testng.annotations.DataProvider;
 
 import java.io.FileReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.obukh.driver;
+package org.obukh.core.driver;
 
 public enum BrowserType {
     CHROME,

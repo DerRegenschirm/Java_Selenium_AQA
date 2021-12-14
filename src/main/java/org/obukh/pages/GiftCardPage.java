@@ -1,25 +1,22 @@
 package org.obukh.pages;
 
 import io.qameta.allure.Step;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.base.BasePage;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
 public class GiftCardPage extends BasePage {
 
     @FindBy(css = "div.product-name")
-    private WebElement title;
+    private WebElement titleLabel;
 
     @FindBy(xpath = "//div[@class='picture']/img")
-    private WebElement mainPicture;
+    private WebElement mainImage;
 
     @FindBy(xpath = "//div[@class='overview']//button[contains(@class,'add-to-cart-button')]")
     private WebElement addToCartMainButton;
@@ -34,7 +31,7 @@ public class GiftCardPage extends BasePage {
     private WebElement notificationBar;
 
     @FindBy(xpath = "//div[@id='bar-notification']//p")
-    private List<WebElement> notificationItems;
+    private List<WebElement> notificationLabels;
 
     @FindBy(xpath = "//span[@class='close']")
     private WebElement closeNotificationBarItem;
@@ -43,8 +40,8 @@ public class GiftCardPage extends BasePage {
     private List<WebElement> allInputFieldsOnForm;
 
     public GiftCardPage() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForElementsLoad(title, mainPicture);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
+        waitForElementsLoad(titleLabel, mainImage);
     }
 
     @Step("Clear all input fields on the form")
@@ -56,7 +53,7 @@ public class GiftCardPage extends BasePage {
         return this;
     }
 
-    @Step("Enter sender's name")
+    @Step("Enter sender's name: {name}")
     public GiftCardPage enterSenderName(String name) {
         logger.info("Print sender name: " + name);
         senderNameField.clear();
@@ -64,7 +61,7 @@ public class GiftCardPage extends BasePage {
         return this;
     }
 
-    @Step("Enter recipient's name")
+    @Step("Enter recipient's name: {recipient}")
     public GiftCardPage enterRecipientName(String recipient) {
         logger.info("Print recipient name: " + recipient);
         recipientNameField.clear();
@@ -91,10 +88,11 @@ public class GiftCardPage extends BasePage {
         return this;
     }
 
+    @Step("Compare text on messages: {message}")
     public boolean compareMessageText ( String message) {
         if (isNotificationBarAppeared()) {
             for (WebElement messageElement :
-                    notificationItems) {
+                    notificationLabels) {
                 if (message.equals(messageElement.getText())) {
                     return true;
                 }

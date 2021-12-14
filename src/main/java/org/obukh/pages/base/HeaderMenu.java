@@ -1,7 +1,7 @@
 package org.obukh.pages.base;
 
 import io.qameta.allure.Step;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.CategoryPage;
 import org.obukh.pages.Currency;
 import org.openqa.selenium.WebElement;
@@ -18,11 +18,11 @@ public class HeaderMenu extends BasePage {
     @FindBy(xpath = "//span[@class='cart-qty']")
     private WebElement numberOfItemsInCart;
 
-    @FindBy(css = "#customerCurrency")
+    @FindBy(id = "customerCurrency")
     private WebElement selectCurrency;
 
     public HeaderMenu() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
     }
 
 

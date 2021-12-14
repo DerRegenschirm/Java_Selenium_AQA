@@ -1,11 +1,11 @@
-package org.obukh.listeners;
+package org.obukh.core.listeners;
 
 import io.qameta.allure.Attachment;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.obukh.driver.WebDriverHolder;
-import org.obukh.utils.PropertiesReader;
+import org.obukh.core.driver.WebDriverFactory;
+import org.obukh.core.utils.PropertiesReader;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestContext;
@@ -38,7 +38,7 @@ public class LoggerTestListener implements ITestListener {
             e.printStackTrace();
         }
 
-        File screenshotAs = ((TakesScreenshot) WebDriverHolder.getInstance().getDriver()).getScreenshotAs(OutputType.FILE);
+        File screenshotAs = ((TakesScreenshot) WebDriverFactory.getDriver()).getScreenshotAs(OutputType.FILE);
         try {
             FileUtils.copyFile(screenshotAs,
                     new File(PropertiesReader.getInstance("app.properties").getPropertyByName("download.dir")
@@ -73,7 +73,7 @@ public class LoggerTestListener implements ITestListener {
     @Attachment(value = "Page screenshot", type = "image/png")
     public byte[] saveScreenshotAllure(ITestResult iTestResult) throws Exception {
         File fileCopy = new File(iTestResult.getName() + ".png");
-        File screenshotFile = ((TakesScreenshot) WebDriverHolder.getInstance().getDriver()).getScreenshotAs(OutputType.FILE);
+        File screenshotFile = ((TakesScreenshot) WebDriverFactory.getDriver()).getScreenshotAs(OutputType.FILE);
         try {
             FileUtils.copyFile(screenshotFile, fileCopy);
         } catch (IOException e) {
