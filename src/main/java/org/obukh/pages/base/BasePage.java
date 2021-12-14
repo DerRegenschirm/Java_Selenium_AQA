@@ -1,8 +1,9 @@
 package org.obukh.pages.base;
 
+import io.qameta.allure.Step;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.CategoryPage;
 import org.obukh.pages.GiftCardPage;
 import org.obukh.pages.SearchPage;
@@ -48,20 +49,23 @@ public class BasePage {
         return new ShoppingCartPage();
     }
 
+    @Step("Wait for element load")
     public BasePage waitForElementsLoad(WebElement element) {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+        new WebDriverWait(WebDriverFactory.getDriver(), 10)
                 .until(ExpectedConditions.visibilityOfAllElements(element));
         return this;
     }
 
+    @Step("Wait for elements are clickable")
     public BasePage waitForElementsClickable(WebElement element) {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+        new WebDriverWait(WebDriverFactory.getDriver(), 10)
                 .until(ExpectedConditions.elementToBeClickable(element));
         return this;
     }
 
+    @Step("Wait for elements load")
     public BasePage waitForElementsLoad(WebElement... args) {
-        new WebDriverWait(WebDriverHolder.getInstance().getDriver(), 10)
+        new WebDriverWait(WebDriverFactory.getDriver(), 10)
                 .until(ExpectedConditions.visibilityOfAllElements(args));
         return this;
     }

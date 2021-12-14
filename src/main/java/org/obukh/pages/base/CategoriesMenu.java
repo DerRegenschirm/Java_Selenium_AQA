@@ -2,7 +2,7 @@ package org.obukh.pages.base;
 
 import io.qameta.allure.Step;
 import org.codehaus.plexus.util.StringUtils;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.CategoryPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -15,18 +15,26 @@ public class CategoriesMenu extends BasePage {
     @FindBy(className = "top-menu")
     private WebElement categoryMenu;
 
+    public CategoriesMenu() {
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
+    }
+
     public CategoryPage selectCategory(String topCategoryName, String subCategoryName) {
         logger.info("Select category: " + topCategoryName + " --> " + subCategoryName);
-        WebElement mainCategory = categoryMenu.findElement(By.xpath("//ul[contains(@class, 'notmobile')]//a[contains(text(), '" + topCategoryName + "')]"));
-        new Actions(WebDriverHolder.getInstance().getDriver())
+       WebElement mainCategory = categoryMenu.findElement(getCategoryMenuElement(topCategoryName));
+        new Actions(WebDriverFactory.getDriver())
                 .moveToElement(mainCategory)
                 .build().perform();
         if (StringUtils.isEmpty(subCategoryName)) {
             mainCategory.click();
         } else {
-            mainCategory.findElement(By.xpath("//ul[contains(@class, 'notmobile')]//a[contains(text(), '" + subCategoryName + "')]")).click();
+            mainCategory.findElement(getCategoryMenuElement(subCategoryName)).click();
         }
         return new CategoryPage();
+    }
+
+    private By getCategoryMenuElement(String categoryName) {
+        return By.xpath(String.format("//ul[contains(@class, 'notmobile')]//a[contains(text(), '%s')]", categoryName));
     }
 
     @Step("Select category")
@@ -35,7 +43,4 @@ public class CategoriesMenu extends BasePage {
         return selectCategory(mainCategoryName,null);
     }
 
-    public CategoriesMenu() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-    }
 }

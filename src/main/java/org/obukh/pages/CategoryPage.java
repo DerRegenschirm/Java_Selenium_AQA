@@ -1,7 +1,7 @@
 package org.obukh.pages;
 
 import io.qameta.allure.Step;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,10 +15,10 @@ import java.util.List;
 public class CategoryPage extends BasePage {
 
     @FindBy(css = ".price.actual-price")
-    private List<WebElement> pricesOnThePage;
+    private List<WebElement> pricesOnThePageLabels;
 
     @FindBy(className = "page-title")
-    private WebElement pageTitle;
+    private WebElement pageTitleLabel;
 
     @FindBy(xpath = "//div[@class='product-item']")
     private List<WebElement> productItems;
@@ -30,27 +30,28 @@ public class CategoryPage extends BasePage {
     private WebElement closeNotificationBar;
 
     public CategoryPage() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForElementsLoad(pageTitle);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
+        waitForElementsLoad(pageTitleLabel);
     }
 
     @Step("Get list of prices on the product wall")
     public List<Double> getPricesOnThePage() {
         logger.info("Get list of prices on the product wall");
         List<Double> pricesList = new ArrayList<>();
-        for (WebElement element :
-                pricesOnThePage) {
-            pricesList.add(Double.parseDouble(element.getText().replace(String.valueOf(currentPriceCurrency().getSymbol()), "")));
-        }
+//        for (WebElement element : pricesOnThePageLabels) {
+//            pricesList.add(Double.parseDouble(element.getText().replace(String.valueOf(currentPriceCurrency().getSymbol()), "")));
+//        }
+        pricesOnThePageLabels.forEach(element ->
+                pricesList.add(Double.parseDouble(element.getText().replace(String.valueOf(currentPriceCurrency().getSymbol()), ""))));
         return pricesList;
     }
 
     @Step("Get the current currency from product wall")
     public Currency currentPriceCurrency() {
         logger.info("Get the current currency from product wall");
-        if (pricesOnThePage.get(0).getText().contains(String.valueOf(Currency.DOLLAR.getSymbol()))) {
+        if (pricesOnThePageLabels.get(0).getText().contains(String.valueOf(Currency.DOLLAR.getSymbol()))) {
             return Currency.DOLLAR;
-        } else if (pricesOnThePage.get(0).getText().contains(String.valueOf(Currency.EURO.getSymbol()))) {
+        } else if (pricesOnThePageLabels.get(0).getText().contains(String.valueOf(Currency.EURO.getSymbol()))) {
             return Currency.EURO;
         } else {
             System.out.println("Selected currency and prices currency are different!");
@@ -91,14 +92,16 @@ public class CategoryPage extends BasePage {
         return new GiftCardPage();
     }
 
-    @Step("close Notification Bar")
+    @Step("Close Notification Bar")
     public CategoryPage closeNotificationBar() {
         try {
             logger.info("Close Notification Bar");
+            int counter = 0;
             do {
                 waitForElementsLoad(closeNotificationBar);
                 closeNotificationBar.click();
-            } while (closeNotificationBar != null);
+                counter++;
+            } while ((closeNotificationBar != null)&&(counter<10)); // need to click the Close button several times
             return new CategoryPage();
         } catch (Exception e) {
             return new CategoryPage();

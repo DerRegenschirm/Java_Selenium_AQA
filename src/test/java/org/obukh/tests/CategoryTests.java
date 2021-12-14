@@ -1,9 +1,8 @@
 package org.obukh.tests;
 
 import org.obukh.pages.Currency;
-import org.obukh.pages.base.BasePage;
 import org.obukh.tests.base.BaseTest;
-import org.obukh.utils.PropertiesReader;
+import org.obukh.core.utils.PropertiesReader;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -16,36 +15,36 @@ public class CategoryTests extends BaseTest {
     @BeforeTest
     public void login() {
         goToUrl(PropertiesReader.getInstance().getPropertyByName("app.base.url"));
-        BasePage page = new BasePage();
-        page.applicationMenu()
+        basePage.applicationMenu()
                 .selectLogin()
                 .logInComplete(PropertiesReader.getInstance().getPropertyByName("user.email"), PropertiesReader.getInstance().getPropertyByName("user.password"));
     }
 
     @AfterTest
     public void logout() {
-        BasePage page = new BasePage();
-        page.applicationMenu()
+        basePage.applicationMenu()
                 .selectLogout();
     }
 
     @Test
     public void changeCurrencyTest() {
-        BasePage page = new BasePage();
-        page.categoriesMenu()
+        basePage.categoriesMenu()
                 .selectMainCategory("Books");
 
-        List<Double> previousPrices = page.categoryPage().getPricesOnThePage();
-        Currency previousPriceSymbol = page.headerMenu().currentCurrency();
+        List<Double> previousPrices = basePage.categoryPage().getPricesOnThePage();
+        Currency previousPriceSymbol = basePage.headerMenu().currentCurrency();
 
-        page.headerMenu()
+        basePage.headerMenu()
                 .changeCurrency();
 
-        List<Double> newPrices = page.categoryPage().getPricesOnThePage();
-        Currency newPriceSymbol = page.headerMenu().currentCurrency();
+        List<Double> newPrices = basePage.categoryPage().getPricesOnThePage();
+        Currency newPriceSymbol = basePage.headerMenu().currentCurrency();
 
-        Assert.assertTrue(page.categoryPage().isPriceChanged(previousPriceSymbol, newPriceSymbol));
-        Assert.assertTrue(page.categoryPage().isPriceCurrencyAndSelectedCurrencyAreTheSame());
-        Assert.assertTrue(page.categoryPage().isNewPriceCorrect(previousPrices, newPrices));
+        Assert.assertTrue(basePage.categoryPage().isPriceChanged(previousPriceSymbol, newPriceSymbol),
+                String.format("The price symbol wasn't changed: %s -> %s", previousPriceSymbol, newPriceSymbol));
+        Assert.assertTrue(basePage.categoryPage().isPriceCurrencyAndSelectedCurrencyAreTheSame(),
+                "The price currency and selected currency are different");
+        Assert.assertTrue(basePage.categoryPage().isNewPriceCorrect(previousPrices, newPrices),
+                String.format("The new price is not correct: %s -> %s", previousPrices, newPrices));
     }
 }

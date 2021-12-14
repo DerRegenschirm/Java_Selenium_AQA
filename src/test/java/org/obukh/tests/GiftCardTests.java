@@ -1,8 +1,7 @@
 package org.obukh.tests;
 
-import org.obukh.pages.base.BasePage;
 import org.obukh.tests.base.BaseTest;
-import org.obukh.utils.PropertiesReader;
+import org.obukh.core.utils.PropertiesReader;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -13,8 +12,7 @@ public class GiftCardTests extends BaseTest {
     @BeforeTest
     public void login() {
         goToUrl(PropertiesReader.getInstance().getPropertyByName("app.base.url"));
-        BasePage page = new BasePage();
-        page.applicationMenu()
+        basePage.applicationMenu()
                 .selectLogin()
                 .logInComplete(PropertiesReader.getInstance().getPropertyByName("user.email"),
                         PropertiesReader.getInstance().getPropertyByName("user.password"));
@@ -22,63 +20,59 @@ public class GiftCardTests extends BaseTest {
 
     @AfterTest
     public void logout() {
-        BasePage page = new BasePage();
-        page.applicationMenu()
+        basePage.applicationMenu()
                 .selectLogout();
     }
 
     @Test
     public void validationErrorMessageTest() {
-        BasePage page = new BasePage();
-        page.categoriesMenu()
+        basePage.categoriesMenu()
                 .selectMainCategory("Gift Cards ")
                 .categoryPage()
                 .clickOnAddToCartButtonRandomGiftCard()
-                .giftCardPage()
                 .clearAllFieldsOnForm()
                 .enterRecipientName("Tom Marvolo Riddle")
                 .clickOnAddToCartButton();
 
-        Assert.assertTrue(page.giftCardPage()
+        Assert.assertTrue(basePage.giftCardPage()
                         .isNotificationBarAppeared(),
                 "No notification bar");
 
         String validationMessageText = "Enter valid sender name";
-        Assert.assertTrue(page.giftCardPage()
+        Assert.assertTrue(basePage.giftCardPage()
                         .compareMessageText(validationMessageText),
                 "Different validation text");
 
-        page.giftCardPage()
+        basePage.giftCardPage()
                 .closeNotificationBar();
     }
 
     @Test
-    public void addGiftCardToCart(){
-        BasePage page = new BasePage();
-        page.categoriesMenu()
+    public void addGiftCardToCart() {
+        basePage.categoriesMenu()
                 .selectMainCategory("Gift Cards ")
                 .categoryPage()
                 .clickOnAddToCartButton(2)
                 .giftCardPage();
 
-        Integer oldQtyOfItemsInCart = page.headerMenu()
-                        .getQtyOfItemsInCart();
+        Integer oldQtyOfItemsInCart = basePage.headerMenu()
+                .getQtyOfItemsInCart();
 
-        page.giftCardPage()
+        basePage.giftCardPage()
                 .clearAllFieldsOnForm()
                 .enterRecipientName("Tom Riddle")
                 .enterSenderName("Lord Voldemort")
                 .clickOnAddToCartButton();
 
-        page.giftCardPage().
+        basePage.giftCardPage().
                 closeNotificationBar();
 
-        Integer newQtyOfItemsInCart = page.headerMenu()
-                        .getQtyOfItemsInCart();
-        Integer qtyToCompare = oldQtyOfItemsInCart+1;
+        Integer newQtyOfItemsInCart = basePage.headerMenu()
+                .getQtyOfItemsInCart();
+        Integer qtyToCompare = oldQtyOfItemsInCart + 1;
 
         Assert.assertEquals(qtyToCompare, newQtyOfItemsInCart,
-                "Different quantity: " + oldQtyOfItemsInCart + " -> " + newQtyOfItemsInCart);
+                String.format("Different quantity: %d -> %d", oldQtyOfItemsInCart, newQtyOfItemsInCart));
     }
 
 

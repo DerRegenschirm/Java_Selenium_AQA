@@ -1,7 +1,7 @@
 package org.obukh.pages.base;
 
 import io.qameta.allure.Step;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.LoginPage;
 import org.obukh.pages.MainPage;
 import org.obukh.pages.ShoppingCartPage;
@@ -14,20 +14,21 @@ import org.openqa.selenium.support.PageFactory;
 public class ApplicationMenu extends BasePage {
 
     public ApplicationMenu() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
     }
 
+    @Step("Select item in main menu {menuItem}")
     public void clickOnMenuItem(MenuItems menuItem) {
         logger.info("Select menu item: " + menuItem);
-        waitForElementsClickable(WebDriverHolder.getInstance().getDriver()
+        waitForElementsClickable(WebDriverFactory.getDriver()
                 .findElement(By.className(("ico-") + menuItem.getValue())));
-        WebDriverHolder.getInstance().getDriver()
+        WebDriverFactory.getDriver()
                 .findElement(By.className(("ico-") + menuItem.getValue())).click();
     }
 
     public boolean isMenuItemVisible(MenuItems menuItem) {
         try {
-            WebElement item = WebDriverHolder.getInstance().getDriver()
+            WebElement item = WebDriverFactory.getDriver()
                     .findElement(By.className(("ico-") + menuItem.getValue()));
             return item.isDisplayed();
         } catch (NoSuchElementException e) {

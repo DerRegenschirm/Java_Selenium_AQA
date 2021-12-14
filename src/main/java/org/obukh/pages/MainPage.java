@@ -1,11 +1,11 @@
 package org.obukh.pages;
 
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.base.BasePage;
 import org.openqa.selenium.support.PageFactory;
 
 public class MainPage extends BasePage {
     public MainPage() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
     }
 }

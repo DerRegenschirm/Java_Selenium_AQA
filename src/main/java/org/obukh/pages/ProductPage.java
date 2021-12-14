@@ -1,24 +1,22 @@
 package org.obukh.pages;
 
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ProductPage extends BasePage {
 
     @FindBy(css = "div.product-name")
-    private WebElement title;
+    private WebElement titleLabel;
 
     @FindBy (xpath = "//div[@class='picture']/img")
-    private WebElement mainPicture;
+    private WebElement mainImage;
 
     public ProductPage() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForElementsLoad(title);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
+        waitForElementsLoad(titleLabel);
     }
 
 }

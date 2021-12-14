@@ -1,7 +1,7 @@
 package org.obukh.pages;
 
 import io.qameta.allure.Step;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.base.BasePage;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -15,42 +15,42 @@ import java.util.Random;
 public class ShoppingCartPage extends BasePage {
 
     @FindBy(xpath = "//h1[contains(text(),'Shopping cart')]")
-    private WebElement pageTitle;
+    private WebElement pageTitleLabel;
 
-    @FindBy(css = ".no-data")
-    private WebElement noDataMessage;
+    @FindBy(className = "no-data")
+    private WebElement noDataLabel;
 
     @FindBy(xpath = "//td[@class='sku']/span[@class='sku-number']")
-    private List<WebElement> skuCodes;
+    private List<WebElement> skuCodesLabels;
 
     @FindBy(css = "span.product-unit-price")
-    private List<WebElement> productPrices;
+    private List<WebElement> productPricesLabels;
 
     @FindBy(css = "input.qty-input")
-    private List<WebElement> productQty;
+    private List<WebElement> productQtyField;
 
     @FindBy(css = "span.product-subtotal")
-    private List<WebElement> productTotalPrice;
+    private List<WebElement> productTotalPriceLabels;
 
     @FindBy(css = "button.remove-btn")
-    private List<WebElement> productRemoveButton;
+    private List<WebElement> productRemoveButtons;
 
     @FindBy(xpath = "//tr[@class='order-subtotal']//span[@class = 'value-summary']")
-    private WebElement priceSubTotal;
+    private WebElement priceSubTotalLabel;
 
     @FindBy(xpath = "//tr[@class='shipping-cost']//span[@class = 'value-summary']")
-    private WebElement priceShipping;
+    private WebElement priceShippingLabel;
 
     @FindBy(xpath = "//tr[@class='tax-value']//span[@class = 'value-summary']")
-    private WebElement priceTax;
+    private WebElement priceTaxLabel;
 
     @FindBy(xpath = "//tr[@class='order-total']//span[@class = 'value-summary']")
-    private WebElement priceTotal;
+    private WebElement priceTotalLabel;
 
 
     public ShoppingCartPage() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
-        waitForElementsLoad(pageTitle);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
+        waitForElementsLoad(pageTitleLabel);
     }
 
     @Step("Remove random product from the cart")
@@ -62,23 +62,19 @@ public class ShoppingCartPage extends BasePage {
         return new ShoppingCartPage();
     }
 
+    @Step("Transform price element to Float")
     public Float getFloatPrice(WebElement price) {
-//        String priceString = priceEl.getText();
-//        Float priceF = Float.parseFloat(priceString
-//                .replaceAll("\\$|\\€", ""));
-        //        .replace('.',','));
-        //logger.info("Parse Price (" + priceString + ")  to float (" + priceF + ")");
-        //return priceF; //the price looks like $X.00 or €X.YY
-        return Float.parseFloat(price.getText().replaceAll("[$€]", ""));
+        logger.info("Transform price element to Float");
+        return Float.parseFloat(price.getText().replaceAll("[$€]", "").replace(",", ""));
     }
 
     @Step("compare prices Inside Table")
     public boolean compareInsideTablePrices(List<ShoppingCartItem> cartItems) {
-        for (int i = 0; i < cartItems.size(); i++) {
-            Float productPrice = getFloatPrice(cartItems.get(i).getPrice());
-            Integer productQty = Integer.parseInt(cartItems.get(i).getQuantity().getAttribute("value"));
+        for (ShoppingCartItem cartItem : cartItems) {
+            Float productPrice = getFloatPrice(cartItem.getPrice());
+            Integer productQty = Integer.parseInt(cartItem.getQuantity().getAttribute("value"));
             Float amountFromRow = productPrice * productQty;
-            Float totalPriceFromRow = getFloatPrice(cartItems.get(i).getTotalProductPrice());
+            Float totalPriceFromRow = getFloatPrice(cartItem.getTotalProductPrice());
 
             if (!amountFromRow.equals(totalPriceFromRow)) {
                 logger.info(String.format("wrong calculation! %.2f * %d = %.2f",
@@ -113,16 +109,16 @@ public class ShoppingCartPage extends BasePage {
     @Step("Init Class with Table fields")
     public List<ShoppingCartItem> initCartTable() {
         logger.info("Init Class with Table fields");
-        int numberOfProducts = skuCodes.size();
+        int numberOfProducts = skuCodesLabels.size();
         List<ShoppingCartItem> cartItems = new ArrayList<>();
         for (int i = 0; i < numberOfProducts; i++) {
 //            ShoppingCartItem cartItem =
 //                    new ShoppingCartItem(productPrices.get(i),productQty.get(i),productTotalPrice.get(i),productRemoveButton.get(i));
             ShoppingCartItem cartItem = new ShoppingCartItem();
-            cartItem.setPrice(productPrices.get(i));
-            cartItem.setQuantity(productQty.get(i));
-            cartItem.setTotalProductPrice(productTotalPrice.get(i));
-            cartItem.setRemoveIcon(productRemoveButton.get(i));
+            cartItem.setPrice(productPricesLabels.get(i));
+            cartItem.setQuantity(productQtyField.get(i));
+            cartItem.setTotalProductPrice(productTotalPriceLabels.get(i));
+            cartItem.setRemoveIcon(productRemoveButtons.get(i));
 
             cartItems.add(cartItem);
         }
@@ -132,7 +128,7 @@ public class ShoppingCartPage extends BasePage {
     @Step("Check if message 'Empty cart' exists")
     public boolean isShoppingCartEmpty() {
         try {
-            return noDataMessage.isDisplayed();
+            return noDataLabel.isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -140,10 +136,10 @@ public class ShoppingCartPage extends BasePage {
 
     @Step("get Amount From Table")
     public Float getAmountFromTable(List<ShoppingCartItem> cartItems) {
-        Float amountFromTable = new Float(0.00f);
-        for (int i = 0; i < cartItems.size(); i++) {
-            Float totalProductPrice = getFloatPrice(cartItems.get(i).getTotalProductPrice());
-            amountFromTable = amountFromTable + totalProductPrice;
+        Float amountFromTable = 0.00f;
+        for (ShoppingCartItem cartItem : cartItems) {
+            Float totalProductPrice = getFloatPrice(cartItem.getTotalProductPrice());
+            amountFromTable += totalProductPrice;
         }
         logger.info("Amount from table - " + amountFromTable);
         return amountFromTable;
@@ -151,20 +147,22 @@ public class ShoppingCartPage extends BasePage {
 
     @Step("get SubTotal Price")
     public Float getSubTotalPrice() {
-        return getFloatPrice(priceSubTotal);
+        return getFloatPrice(priceSubTotalLabel);
     }
 
     @Step("get Shipping Cost")
     public Float getShippingCost() {
-        return getFloatPrice(priceShipping);
+        return getFloatPrice(priceShippingLabel);
     }
 
+    @Step("get Tax Cost")
     public Float getTaxCost() {
-        return getFloatPrice(priceTax);
+        return getFloatPrice(priceTaxLabel);
     }
 
+    @Step("get Total Amount below the Table")
     public Float getTotalAmount() {
-        return getFloatPrice(priceTotal);
+        return getFloatPrice(priceTotalLabel);
     }
 
 
@@ -174,23 +172,23 @@ public class ShoppingCartPage extends BasePage {
         public ShoppingCartItem() {
         }
 
-        public ShoppingCartItem(WebElement sku, WebElement image, WebElement productTitle, WebElement price, WebElement quantity, WebElement totalProductPrice, WebElement removeIcon) {
-            this.sku = sku;
-            this.image = image;
-            this.productTitle = productTitle;
-            this.price = price;
-            this.quantity = quantity;
-            this.totalProductPrice = totalProductPrice;
-            this.removeIcon = removeIcon;
-        }
-
-        public ShoppingCartItem(WebElement price, WebElement quantity, WebElement totalProductPrice, WebElement removeIcon) {
-            this.price = price;
-            this.quantity = quantity;
-            this.totalProductPrice = totalProductPrice;
-            this.removeIcon = removeIcon;
-        }
-
+//        public ShoppingCartItem(WebElement sku, WebElement image, WebElement productTitle, WebElement price, WebElement quantity, WebElement totalProductPrice, WebElement removeIcon) {
+//            this.sku = sku;
+//            this.image = image;
+//            this.productTitle = productTitle;
+//            this.price = price;
+//            this.quantity = quantity;
+//            this.totalProductPrice = totalProductPrice;
+//            this.removeIcon = removeIcon;
+//        }
+//
+//        public ShoppingCartItem(WebElement price, WebElement quantity, WebElement totalProductPrice, WebElement removeIcon) {
+//            this.price = price;
+//            this.quantity = quantity;
+//            this.totalProductPrice = totalProductPrice;
+//            this.removeIcon = removeIcon;
+//        }
+//
 //        public WebElement getSku() {
 //            return sku;
 //        }

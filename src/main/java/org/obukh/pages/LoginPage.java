@@ -1,7 +1,7 @@
 package org.obukh.pages;
 
 import io.qameta.allure.Step;
-import org.obukh.driver.WebDriverHolder;
+import org.obukh.core.driver.WebDriverFactory;
 import org.obukh.pages.base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -18,17 +18,17 @@ public class LoginPage extends BasePage {
     private WebElement loginButton;
 
     public LoginPage() {
-        PageFactory.initElements(WebDriverHolder.getInstance().getDriver(), this);
+        PageFactory.initElements(WebDriverFactory.getDriver(), this);
     }
 
-    @Step ("Enter Email")
+    @Step ("Enter Email: {email}")
     public LoginPage enterToEmailField (String email) {
         logger.info("Print email: " + email);
         emailField.clear();
         emailField.sendKeys(email);
         return this;
     }
-    @Step ("Enter Password")
+    @Step ("Enter Password: {password}")
     public LoginPage enterToPasswordField (String password) {
         logger.info("Print password: " + password);
         passwordField.clear();
